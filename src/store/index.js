@@ -1,29 +1,30 @@
-import { ReduceStore } from 'flux/utils';
-import { Dispatcher } from 'flux';
 import storeEnums from './enums';
+const $ = require('zepto')
 
-const DefaultDispatcher =  new Dispatcher();
-class ComponentStore extends ReduceStore {
-  constructor() {
-    super(DefaultDispatcher);
+const subscribers = []
+let state = {
+  traces: [{
+    title: 'Trace One'
+  },{
+    title: 'Trace Two'
+  }]
+}
+
+class ComponentStore {
+  subscribe(fn) {
+    return subscribers.push(fn)
   }
-
-  getInitialState() {
-    return {
-      processes: [{},{},{},{}]
-    }
+  dispatch(action, payload) {
+    subscribers.forEach(fn => {
+      fn(this.reduce(payload))
+    })
   }
-
-  reduce(state, action) {
-    switch (action.type) {
-      case storeEnums.ADD_TRACE_DATA:
-        alert('do something here')
-        // Do nothing for now, we will add logic here soon!
-        return state;
-
-      default:
-        return state;
-    }
+  reduce(payload) {
+    state = $.extend(state, payload)
+    return state
+  }
+  getState() {
+    return state
   }
 }
 

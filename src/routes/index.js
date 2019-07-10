@@ -1,11 +1,15 @@
 var grapnel = require('grapnel');
 var router = new grapnel();
 
+import store from 'store';
+
 //setup routes for app
 router.get('', function(req) {
   // default
-  var view = require('views/main');
-  view.appendTo('#app');
+  console.log(store)
+  var view = require('views/main')
+  view.update(store.getState())
+  view.appendTo('#app')
 });
 
-module.exports = router;
+module.exports = router
